@@ -12,7 +12,7 @@ The extension extracts the article using Mozilla Readability and converts the HT
 
 ## Install
 
-Prerequisites: Google Chrome (or Chromium), Python 3.10+, Linux.
+Prerequisites: Google Chrome (or Chromium), [uv](https://docs.astral.sh/uv/) (used as the script runner via the host's `#!/usr/bin/env -S uv run --script` shebang — uv handles Python interpreter selection per the PEP 723 header), Linux.
 
 1. **Load the extension unpacked.**
    - Open `chrome://extensions`, enable *Developer mode*.

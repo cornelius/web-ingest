@@ -24,7 +24,8 @@ All diagnostic output in the host goes to `~/.local/state/web-ingest/host.log` v
 
 ## Working on the host
 
-- Single-file Python, PEP 723 header (no external deps beyond stdlib). Keep it that way unless there's a strong reason — avoids a venv setup tax.
+- Single-file Python, PEP 723 header. Run via `#!/usr/bin/env -S uv run --script` — uv reads the header and picks (or installs) a compatible interpreter. **Do not** change the shebang to `python3`; on systems with a pyenv shim or older default Python, that picks the wrong interpreter and the host crashes silently from Chrome's perspective (it just exits with a SyntaxError).
+- Stdlib only. Keep it that way unless there's a strong reason — adding deps would force uv to spin up a venv, slowing cold start.
 - The `--no-build` design (script runs as-is, no install step) means the file Chrome calls is the file in the repo. Editing it takes effect on the next clip.
 - The `Path.home() / ".local/state/web-ingest"` log directory is created on first call.
 

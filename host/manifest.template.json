@@ -1,0 +1,9 @@
+{
+  "name": "de.cornelius.web_ingest",
+  "description": "Ingest web pages as markdown",
+  "path": "{HOST_PATH}",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://{EXTENSION_ID}/"
+  ]
+}

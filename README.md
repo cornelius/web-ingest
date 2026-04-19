@@ -2,6 +2,21 @@
 
 Chrome extension that clips the current web page as clean markdown to a local folder. No application launch, no cloud round-trip — the markdown lands in a directory of your choosing on disk.
 
+> **Status:** v0.1 — works for one user (the author) on one Linux box. Useful but rough; expect missing edge cases.
+
+## What it does (and doesn't)
+
+**Does:**
+- One-click clip of an article-shaped page → clean markdown on disk
+- YAML frontmatter with title, source URL, and timestamp
+- Configurable output directory
+
+**Doesn't (yet):**
+- Selection-only clipping (it always extracts the whole article)
+- Per-domain extraction tweaks
+- Firefox (different native-messaging manifest schema)
+- Anything on `chrome://`, `about:`, or non-article pages (search results, social feeds, dashboards) — Readability gives up and you get an `ERR` badge
+
 ## How it works
 
 ```
@@ -14,12 +29,21 @@ The extension extracts the article using Mozilla Readability and converts the HT
 
 Prerequisites: Google Chrome (or Chromium), [uv](https://docs.astral.sh/uv/) (used as the script runner via the host's `#!/usr/bin/env -S uv run --script` shebang — uv handles Python interpreter selection per the PEP 723 header), Linux.
 
-1. **Load the extension unpacked.**
-   - Open `chrome://extensions`, enable *Developer mode*.
-   - Click *Load unpacked* and select the `extension/` folder.
-   - Note the extension ID Chrome assigns (a long alphanumeric string).
+1. **Clone the repo.**
 
-2. **Register the native messaging host.**
+   ```sh
+   git clone https://github.com/cornelius/web-ingest.git
+   cd web-ingest
+   ```
+
+   The extension and host run from the repo in place — no copy step.
+
+2. **Load the extension unpacked.**
+   - Open `chrome://extensions`, enable *Developer mode* (top-right toggle).
+   - Click *Load unpacked* and select the `extension/` folder.
+   - Note the extension ID Chrome assigns (a long lowercase alphanumeric string).
+
+3. **Register the native messaging host.**
 
    ```sh
    ./scripts/install.sh <extension-id>
@@ -27,15 +51,15 @@ Prerequisites: Google Chrome (or Chromium), [uv](https://docs.astral.sh/uv/) (us
 
    This drops a manifest at `~/.config/google-chrome/NativeMessagingHosts/de.cornelius.web_ingest.json` pointing at `host/web-ingest-host.py` in this repo.
 
-3. **(Optional) Choose where clips land.**
+4. **(Optional) Choose where clips land.**
 
    ```sh
    export WEB_INGEST_DIR="$HOME/somewhere/else"
    ```
 
-   Default is `~/incoming/web/`. The variable is read by the host on each invocation, so set it in your shell profile or in a Chrome-launch wrapper.
+   Default is `~/incoming/web/`. The variable is read by the host on each invocation, so set it in your shell profile (or in a wrapper that launches Chrome) — Chrome must inherit the env.
 
-4. **Restart Chrome** (or just disable + re-enable the extension) so it picks up the new manifest.
+5. **Restart Chrome** (or just disable + re-enable the extension) so it picks up the new manifest.
 
 ## Usage
 

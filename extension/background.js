@@ -31,8 +31,11 @@ chrome.action.onClicked.addListener(async (tab) => {
       files: ['lib/readability.js', 'lib/turndown.js', 'clip.js'],
     });
     const clip = results?.[results.length - 1]?.result;
+    if (clip?.error) {
+      throw new Error(clip.error);
+    }
     if (!clip || !clip.markdown) {
-      throw new Error('Readability returned nothing — page may not be an article');
+      throw new Error('Readability returned nothing - page may not be an article');
     }
 
     const { subdir } = await chrome.storage.sync.get({ subdir: DEFAULT_SUBDIR });

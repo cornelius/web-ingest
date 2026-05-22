@@ -54,11 +54,13 @@ Prerequisites: Google Chrome (or Chromium), [uv](https://docs.astral.sh/uv/) (us
 
 4. **(Optional) Choose where clips land.**
 
+   Default is `~/incoming/web/`. To change it, either open the extension's options page (`chrome://extensions` → *Web Ingest* → *Details* → *Extension options*) and fill in *Clip output directory*, or set an env var that Chrome inherits:
+
    ```sh
    export WEB_INGEST_DIR="$HOME/somewhere/else"
    ```
 
-   Default is `~/incoming/web/`. The variable is read by the host on each invocation, so set it in your shell profile (or in a wrapper that launches Chrome) — Chrome must inherit the env.
+   The options-page field wins if both are set; the env var is read by the host on each invocation, so set it in your shell profile (or in a wrapper that launches Chrome).
 
 5. **Restart Chrome** (or just disable + re-enable the extension) so it picks up the new manifest.
 
@@ -76,7 +78,7 @@ The default flow is silent — click the icon, get the file. If you'd rather jot
 
 | Knob | Default | Where |
 |---|---|---|
-| Output directory | `~/incoming/web/` | env var `WEB_INGEST_DIR` |
+| Output directory | `~/incoming/web/` | extension options page, or env var `WEB_INGEST_DIR` as a fallback |
 | Log file | `~/.local/state/web-ingest/host.log` | hard-coded in host script |
 | Ask for a comment | off | extension options page (`chrome.storage.sync`) |
 

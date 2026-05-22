@@ -44,7 +44,8 @@ Installed web-ingest native messaging host.
 
   Manifest:    $MANIFEST_PATH
   Host script: $HOST_PATH
-  Output dir:  \${WEB_INGEST_DIR:-\$HOME/incoming/web}
+  Output dir:  set on the extension's options page (falls back to
+               \${WEB_INGEST_DIR:-\$HOME/incoming/web})
   Log file:    \$HOME/.local/state/web-ingest/host.log
 
 Restart Chrome (or the extension) to pick up the manifest, then click

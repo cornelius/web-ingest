@@ -57,7 +57,7 @@ async function saveClip({ title, url, markdown, comment, subdir }) {
     comment,
   });
   const content = frontmatter + markdown;
-  const filename = `${timestampForFilename(clippedAt)}--${slugify(safeTitle)}.md`;
+  const filename = `${timestampForFilename(clippedAt)}-${slugify(safeTitle)}.md`;
   const dir = normalizeSubdir(subdir);
   const path = dir ? `${dir}/${filename}` : filename;
   const dataUrl =

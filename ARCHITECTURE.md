@@ -5,7 +5,7 @@
 ```
 ┌─────────────────────────────────────────────────┐    chrome.downloads    ┌────────────────────────────┐
 │  Chrome extension (MV3)                          │ ───────────────────▶  │  <Downloads>/web-clips/    │
-│  - background.js (service worker)                │   data: URL with      │    YYYY-MM-DD-HHmm-        │
+│  - background.js (service worker)                │   data: URL with      │    YYYY-MM-DDTHHmm-        │
 │  - clip.js (injected into page)                  │   markdown + frontmt. │    <slug>.md               │
 │  - clip-writer.js (slug + frontmatter + save)    │                       └────────────────────────────┘
 │  - Readability + Turndown (vendored)             │
@@ -32,7 +32,7 @@ Optional comment dialog: when the `askForComment` setting (in `chrome.storage.sy
 
 ## Filename and content
 
-Filename: `YYYY-MM-DD-HHmm-<title-slug>.md` where the slug is lowercase, Unicode letter/digit/hyphen only (using `\p{L}\p{N}` in JS regex), max 60 chars. Timestamps are in the user's local timezone.
+Filename: `YYYY-MM-DDTHHmm-<title-slug>.md` where the slug is lowercase, Unicode letter/digit/hyphen only (using `\p{L}\p{N}` in JS regex), max 60 chars. The timestamp uses ISO 8601's extended date format combined with its basic time format (no colons) so the filename is parseable as ISO 8601 yet safe on Windows. Times are in the user's local timezone.
 
 Collisions: `chrome.downloads.download` is called with `conflictAction: 'uniquify'`, so Chrome appends ` (1)`, ` (2)`, etc. for filename collisions instead of overwriting.
 
@@ -61,7 +61,7 @@ YAML strings are quoted whenever they contain characters that would require it (
 | Downloads root | Chrome's own setting (`chrome://settings/downloads`) | OS-dependent (`~/Downloads/` on Linux/macOS) |
 | Ask for a comment | `chrome.storage.sync` key `askForComment` (options page) | `false` |
 
-The final on-disk path is `<Chrome's Downloads dir>/<subdir>/YYYY-MM-DD-HHmm-<slug>.md`. The extension cannot write outside the Downloads tree — that's a `chrome.downloads` API constraint, not a config choice.
+The final on-disk path is `<Chrome's Downloads dir>/<subdir>/YYYY-MM-DDTHHmm-<slug>.md`. The extension cannot write outside the Downloads tree — that's a `chrome.downloads` API constraint, not a config choice.
 
 `subdir` may contain forward slashes to nest further (e.g. `notes/web` → `<Downloads>/notes/web/`). Leading and trailing slashes are stripped. Empty means write directly into Downloads.
 

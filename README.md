@@ -51,7 +51,7 @@ That's it — there's no host process to register and no install script to run.
 
 Open any article, click the *Web Ingest* toolbar icon. A green `OK` badge appears for ~3 seconds when the file has been written; a red `ERR` badge means something went wrong (open the service-worker console at `chrome://extensions` for details).
 
-Files are named `YYYY-MM-DD-HHmm-<title-slug>.md`. If two clips collide on the same filename, Chrome appends `(1)`, `(2)`, etc.
+Files are named `YYYY-MM-DDTHHmm-<title-slug>.md` (ISO 8601 timestamp, no colons). If two clips collide on the same filename, Chrome appends `(1)`, `(2)`, etc.
 
 ### Adding a comment
 

@@ -40,7 +40,7 @@ function pad2(n) {
 }
 
 function timestampForFilename(d) {
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}-${pad2(d.getHours())}${pad2(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}`;
 }
 
 function normalizeSubdir(raw) {

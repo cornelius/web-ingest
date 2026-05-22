@@ -5,11 +5,16 @@
 """Native messaging host for the Web Ingest Chrome extension.
 
 Reads a single length-prefixed JSON message on stdin, writes the markdown
-payload to disk under WEB_INGEST_DIR (default ~/incoming/web), and replies
-with {ok, path} or {ok: false, error}.
+payload to disk under the configured output directory, and replies with
+{ok, path} or {ok: false, error}.
+
+Output directory precedence: message field `output_dir` (set via the
+extension's options page), then env var WEB_INGEST_DIR, then ~/incoming/web.
 
 Optional fields on the incoming message:
 - comment: free-text note from the user, written to frontmatter when non-empty.
+- output_dir: overrides WEB_INGEST_DIR and the built-in default. Empty or
+  whitespace-only values are ignored.
 
 Wire protocol: 4 bytes native-endian unsigned int (message length in bytes),
 then that many bytes of UTF-8 JSON. Both directions.
@@ -84,7 +89,9 @@ def build_frontmatter(title: str, url: str, clipped_at: str, comment: str = "") 
 
 
 def write_clip(msg: dict) -> Path:
-    out_dir = Path(os.environ.get("WEB_INGEST_DIR", str(DEFAULT_DIR))).expanduser()
+    msg_dir = (msg.get("output_dir") or "").strip()
+    env_dir = os.environ.get("WEB_INGEST_DIR", "").strip()
+    out_dir = Path(msg_dir or env_dir or str(DEFAULT_DIR)).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
 
     title = msg.get("title", "") or "untitled"

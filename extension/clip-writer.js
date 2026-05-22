@@ -7,7 +7,7 @@ function slugify(text) {
   if (!text) return 'untitled';
   let s = text.replace(/[^\p{L}\p{N}\s_-]/gu, '').trim().toLowerCase();
   s = s.replace(/[\s_-]+/g, '-');
-  s = s.slice(0, SLUG_MAX_LEN).replace(/^-+|-+$/g, '');
+  s = Array.from(s).slice(0, SLUG_MAX_LEN).join('').replace(/^-+|-+$/g, '');
   return s || 'untitled';
 }
 

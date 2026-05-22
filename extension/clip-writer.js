@@ -12,14 +12,13 @@ function slugify(text) {
 }
 
 function yamlEscape(s) {
-  if (s === '' || /[:#\[\]{}",&*!|>%@`\n]/.test(s) || s !== s.trim()) {
-    const escaped = s
-      .replace(/\\/g, '\\\\')
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, '\\n');
-    return '"' + escaped + '"';
-  }
-  return s;
+  const escaped = String(s)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
+  return '"' + escaped + '"';
 }
 
 function buildFrontmatter({ title, url, clippedAt, comment }) {

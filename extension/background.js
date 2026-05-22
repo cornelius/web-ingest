@@ -2,6 +2,7 @@ importScripts('clip-writer.js');
 
 const BADGE_DURATION_MS = 3000;
 const DEFAULT_SUBDIR = 'web-clips';
+const DEFAULT_TITLE = 'Clip page as markdown';
 
 async function syncPopup() {
   const { askForComment } = await chrome.storage.sync.get({ askForComment: false });
@@ -20,14 +21,17 @@ chrome.storage.onChanged.addListener((changes, area) => {
 // Fires only when default_popup is unset (askForComment === false).
 // The popup path is handled entirely in popup.js.
 chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.id || !tab.url || !/^https?:/.test(tab.url)) {
-    await flashBadge('SKIP', '#9e9e9e');
+  const tabId = tab.id;
+  await resetTitle(tabId);
+
+  if (!tabId || !tab.url || !/^https?:/.test(tab.url)) {
+    await flashBadge(tabId, 'SKIP', '#9e9e9e');
     return;
   }
 
   try {
     const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+      target: { tabId },
       files: ['lib/readability.js', 'lib/turndown.js', 'clip.js'],
     });
     const clip = results?.[results.length - 1]?.result;
@@ -47,15 +51,20 @@ chrome.action.onClicked.addListener(async (tab) => {
       subdir,
     });
 
-    await flashBadge('OK', '#4caf50');
+    await flashBadge(tabId, 'OK', '#4caf50');
   } catch (err) {
     console.error('[web-ingest] clip failed:', err);
-    await flashBadge('ERR', '#f44336');
+    await chrome.action.setTitle({ tabId, title: `Web Ingest - ${err.message}` });
+    await flashBadge(tabId, 'ERR', '#f44336');
   }
 });
 
-async function flashBadge(text, color) {
-  await chrome.action.setBadgeText({ text });
-  await chrome.action.setBadgeBackgroundColor({ color });
-  setTimeout(() => chrome.action.setBadgeText({ text: '' }), BADGE_DURATION_MS);
+async function flashBadge(tabId, text, color) {
+  await chrome.action.setBadgeText({ text, tabId });
+  await chrome.action.setBadgeBackgroundColor({ color, tabId });
+  setTimeout(() => chrome.action.setBadgeText({ text: '', tabId }), BADGE_DURATION_MS);
+}
+
+function resetTitle(tabId) {
+  return chrome.action.setTitle({ tabId, title: DEFAULT_TITLE });
 }

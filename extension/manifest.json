@@ -3,7 +3,7 @@
   "name": "Web Ingest",
   "version": "0.1.0",
   "description": "Clip the current page as markdown to a local folder.",
-  "permissions": ["nativeMessaging", "activeTab", "scripting", "storage"],
+  "permissions": ["downloads", "activeTab", "scripting", "storage"],
   "background": {
     "service_worker": "background.js"
   },

@@ -1,4 +1,4 @@
-const HOST_NAME = 'de.cornelius.web_ingest';
+const DEFAULT_SUBDIR = 'web-clips';
 
 const titleEl = document.getElementById('title');
 const urlEl = document.getElementById('url');
@@ -47,23 +47,18 @@ async function save() {
       throw new Error('Readability returned nothing — page may not be an article');
     }
 
-    const { outputDir } = await chrome.storage.sync.get({ outputDir: '' });
+    const { subdir } = await chrome.storage.sync.get({ subdir: DEFAULT_SUBDIR });
 
-    const response = await chrome.runtime.sendNativeMessage(HOST_NAME, {
-      url: activeTab.url,
+    await saveClip({
       title: clip.title || activeTab.title || '',
+      url: activeTab.url,
       markdown: clip.markdown,
       comment: commentEl.value,
-      clipped_at: new Date().toISOString(),
-      ...(outputDir ? { output_dir: outputDir } : {}),
+      subdir,
     });
 
-    if (response && response.ok) {
-      setStatus('Saved.', 'ok');
-      setTimeout(() => window.close(), 400);
-    } else {
-      throw new Error(response?.error || 'host returned no ok flag');
-    }
+    setStatus('Saved.', 'ok');
+    setTimeout(() => window.close(), 400);
   } catch (err) {
     console.error('[web-ingest] clip failed:', err);
     setStatus(err.message || String(err), 'error');

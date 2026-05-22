@@ -1,5 +1,7 @@
-const HOST_NAME = 'de.cornelius.web_ingest';
+importScripts('clip-writer.js');
+
 const BADGE_DURATION_MS = 3000;
+const DEFAULT_SUBDIR = 'web-clips';
 
 async function syncPopup() {
   const { askForComment } = await chrome.storage.sync.get({ askForComment: false });
@@ -33,21 +35,16 @@ chrome.action.onClicked.addListener(async (tab) => {
       throw new Error('Readability returned nothing — page may not be an article');
     }
 
-    const { outputDir } = await chrome.storage.sync.get({ outputDir: '' });
+    const { subdir } = await chrome.storage.sync.get({ subdir: DEFAULT_SUBDIR });
 
-    const response = await chrome.runtime.sendNativeMessage(HOST_NAME, {
-      url: tab.url,
+    await saveClip({
       title: clip.title || tab.title || '',
+      url: tab.url,
       markdown: clip.markdown,
-      clipped_at: new Date().toISOString(),
-      ...(outputDir ? { output_dir: outputDir } : {}),
+      subdir,
     });
 
-    if (response && response.ok) {
-      await flashBadge('OK', '#4caf50');
-    } else {
-      throw new Error(response?.error || 'host returned no ok flag');
-    }
+    await flashBadge('OK', '#4caf50');
   } catch (err) {
     console.error('[web-ingest] clip failed:', err);
     await flashBadge('ERR', '#f44336');

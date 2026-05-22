@@ -52,12 +52,12 @@
   <body>
     <h1>Web Ingest</h1>
     <div class="field">
-      <label for="outputDir">Clip output directory</label>
-      <input type="text" id="outputDir" placeholder="~/incoming/web" spellcheck="false" />
+      <label for="subdir">Subdirectory under Downloads</label>
+      <input type="text" id="subdir" placeholder="web-clips" spellcheck="false" />
       <div class="hint">
-        Where clipped pages are written. Leave empty to use the default
-        (or the <code>WEB_INGEST_DIR</code> environment variable, if set).
-        A leading <code>~</code> is expanded to your home directory.
+        Clips land in <code>&lt;Downloads&gt;/&lt;subdirectory&gt;/</code>.
+        Forward slashes nest further (e.g. <code>notes/web</code>). Leave
+        empty to write directly into your Downloads folder.
       </div>
     </div>
     <div class="field">

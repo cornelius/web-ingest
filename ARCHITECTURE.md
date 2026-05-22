@@ -25,14 +25,15 @@ One component: the extension. The whole pipeline (extract, convert, format, save
    - Concatenates frontmatter + markdown into one string
    - Encodes that as a `data:text/markdown;charset=utf-8,...` URL
    - Calls `chrome.downloads.download({ url, filename, saveAs: false, conflictAction: 'uniquify' })`
+   - Awaits the terminal `complete` state on `chrome.downloads.onChanged`, or rejects on `interrupted` with the reason Chrome reported
 
-3. Chrome writes the file under the user's configured Downloads directory.
+3. Chrome writes the file under the user's configured Downloads directory. The `OK` badge fires only after the download has reached the `complete` state, so a disk-full or permission failure surfaces as `ERR` with the interruption reason on the toolbar tooltip.
 
 Optional comment dialog: when the `askForComment` setting (in `chrome.storage.sync`) is on, the service worker sets `chrome.action.setPopup({ popup: 'popup.html' })`. Chrome then opens `popup.html` on click instead of firing `onClicked`; `popup.js` runs the same extraction + `saveClip` flow with the user's comment attached. `popup.html` loads `clip-writer.js` as a regular `<script>` so the popup and the service worker share the exact same save path.
 
 ## Filename and content
 
-Filename: `YYYYMMDDTHHmm-<title-slug>.md` where the slug is lowercase, Unicode letter/digit/hyphen only (using `\p{L}\p{N}` in JS regex), max 60 chars. The timestamp is ISO 8601 basic format (no separators in date or time) so the filename is parseable as ISO 8601 and safe on every filesystem. Times are in the user's local timezone.
+Filename: `YYYYMMDDTHHmm-<title-slug>.md` where the slug is lowercase, Unicode letter/digit/hyphen only (using `\p{L}\p{N}` in JS regex), max 60 *code points* (iterated via `Array.from` so a supplementary-plane character at the cap boundary never leaves a lone surrogate in the filename). The timestamp is ISO 8601 basic format (no separators in date or time) so the filename is parseable as ISO 8601 and safe on every filesystem. Times are in the user's local timezone.
 
 Collisions: `chrome.downloads.download` is called with `conflictAction: 'uniquify'`, so Chrome appends ` (1)`, ` (2)`, etc. for filename collisions instead of overwriting.
 
@@ -51,7 +52,7 @@ comment: "optional, only present when a non-empty comment was supplied"
 
 `clipped_at` is the ISO-8601 UTC timestamp from `new Date().toISOString()`. The filename timestamp is local time and uses a different format; this is intentional — filenames sort better in local time, frontmatter is unambiguous in UTC.
 
-YAML strings are quoted whenever they contain characters that would require it (or whitespace at the boundaries) — this avoids parser surprises across YAML implementations. Embedded newlines in a quoted scalar are encoded as `\n` rather than literal line breaks, so a multiline comment stays on one frontmatter line.
+YAML strings are *always* double-quoted, regardless of content. The "only quote when needed" path got tangled in yaml's reserved words (`null`, `true`, `yes`, `~`, plain integers, leading flow indicators) and missed tab and CR. Unconditional quoting is a few extra bytes and zero ambiguity. Escapes cover `\`, `"`, `\n`, `\r`, and `\t`, so a multiline comment stays on one frontmatter line.
 
 ## Configuration
 
@@ -63,7 +64,7 @@ YAML strings are quoted whenever they contain characters that would require it (
 
 The final on-disk path is `<Chrome's Downloads dir>/<subdir>/YYYYMMDDTHHmm-<slug>.md`. The extension cannot write outside the Downloads tree — that's a `chrome.downloads` API constraint, not a config choice.
 
-`subdir` may contain forward slashes to nest further (e.g. `notes/web` → `<Downloads>/notes/web/`). Leading and trailing slashes are stripped. Empty means write directly into Downloads.
+`subdir` may contain forward slashes to nest further (e.g. `notes/web` → `<Downloads>/notes/web/`). Leading and trailing slashes are stripped. Empty means write directly into Downloads. The options page validates input on every keystroke (debounced 300 ms before persisting) and rejects backslashes, control characters, and `.`/`..` segments before they reach the download API — bad values surface as inline error text under the field, not as a generic `ERR` badge a clip later.
 
 ## Why this shape
 
@@ -78,6 +79,7 @@ The previous design used a native-messaging host (a small Python script) to writ
 - **No remote code in MV3.** Readability and Turndown must be vendored, not loaded from a CDN. They are.
 - **Readability does best on article-shaped pages.** Search results, social feeds, and dashboards will produce poor markdown or nothing. The grey `SKIP` badge handles `chrome://` / `about:` pages but not "this page is structurally not an article" — those will produce a red `ERR` badge.
 - **Manifest-V3 service workers are ephemeral.** Don't store state in `background.js` globals — they get reaped between events. The extension is currently stateless aside from `chrome.storage.sync`.
+- **Action badge and title are per-tab.** Every `setBadgeText` / `setBadgeBackgroundColor` / `setTitle` call passes `tabId`, so clipping in tab A and switching to tab B leaves B with its own state. A failed clip puts the error message on the toolbar tooltip via `setTitle`, so the user can hover the icon instead of opening the service-worker console.
 
 ## Out of scope (for now)
 

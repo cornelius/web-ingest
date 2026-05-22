@@ -33,11 +33,14 @@ chrome.action.onClicked.addListener(async (tab) => {
       throw new Error('Readability returned nothing — page may not be an article');
     }
 
+    const { outputDir } = await chrome.storage.sync.get({ outputDir: '' });
+
     const response = await chrome.runtime.sendNativeMessage(HOST_NAME, {
       url: tab.url,
       title: clip.title || tab.title || '',
       markdown: clip.markdown,
       clipped_at: new Date().toISOString(),
+      ...(outputDir ? { output_dir: outputDir } : {}),
     });
 
     if (response && response.ok) {

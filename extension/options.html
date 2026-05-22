@@ -14,17 +14,32 @@
         font-size: 16px;
         margin: 0 0 16px;
       }
-      label {
+      .field {
+        margin-bottom: 16px;
+      }
+      label.checkbox {
         display: flex;
         align-items: center;
         gap: 8px;
         cursor: pointer;
       }
+      input[type="text"] {
+        box-sizing: border-box;
+        width: 100%;
+        margin-top: 4px;
+        padding: 4px 6px;
+        font: inherit;
+      }
       .hint {
         color: #666;
         font-size: 12px;
         margin-top: 6px;
+      }
+      label.checkbox + .hint {
         margin-left: 24px;
+      }
+      .hint code {
+        font-size: 11px;
       }
       .saved {
         color: #2e7d32;
@@ -36,14 +51,25 @@
   </head>
   <body>
     <h1>Web Ingest</h1>
-    <label>
-      <input type="checkbox" id="askForComment" />
-      Ask for a comment when clipping
-    </label>
-    <div class="hint">
-      When enabled, clicking the toolbar icon opens a small popup with a
-      comment field. The comment is stored alongside the page in the YAML
-      frontmatter.
+    <div class="field">
+      <label for="outputDir">Clip output directory</label>
+      <input type="text" id="outputDir" placeholder="~/incoming/web" spellcheck="false" />
+      <div class="hint">
+        Where clipped pages are written. Leave empty to use the default
+        (or the <code>WEB_INGEST_DIR</code> environment variable, if set).
+        A leading <code>~</code> is expanded to your home directory.
+      </div>
+    </div>
+    <div class="field">
+      <label class="checkbox">
+        <input type="checkbox" id="askForComment" />
+        Ask for a comment when clipping
+      </label>
+      <div class="hint">
+        When enabled, clicking the toolbar icon opens a small popup with a
+        comment field. The comment is stored alongside the page in the YAML
+        frontmatter.
+      </div>
     </div>
     <div class="saved" id="saved"></div>
     <script src="options.js"></script>

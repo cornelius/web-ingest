@@ -47,12 +47,15 @@ async function save() {
       throw new Error('Readability returned nothing — page may not be an article');
     }
 
+    const { outputDir } = await chrome.storage.sync.get({ outputDir: '' });
+
     const response = await chrome.runtime.sendNativeMessage(HOST_NAME, {
       url: activeTab.url,
       title: clip.title || activeTab.title || '',
       markdown: clip.markdown,
       comment: commentEl.value,
       clipped_at: new Date().toISOString(),
+      ...(outputDir ? { output_dir: outputDir } : {}),
     });
 
     if (response && response.ok) {

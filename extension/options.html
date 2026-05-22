@@ -41,6 +41,12 @@
       .hint code {
         font-size: 11px;
       }
+      .error {
+        color: #c62828;
+        font-size: 12px;
+        margin-top: 4px;
+        min-height: 14px;
+      }
       .saved {
         color: #2e7d32;
         font-size: 12px;
@@ -54,6 +60,7 @@
     <div class="field">
       <label for="subdir">Subdirectory under Downloads</label>
       <input type="text" id="subdir" placeholder="web-clips" spellcheck="false" />
+      <div class="error" id="subdirError"></div>
       <div class="hint">
         Clips land in <code>&lt;Downloads&gt;/&lt;subdirectory&gt;/</code>.
         Forward slashes nest further (e.g. <code>notes/web</code>). Leave

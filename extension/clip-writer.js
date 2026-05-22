@@ -62,10 +62,30 @@ async function saveClip({ title, url, markdown, comment, subdir }) {
   const dataUrl =
     'data:text/markdown;charset=utf-8,' + encodeURIComponent(content);
 
-  return chrome.downloads.download({
+  const downloadId = await chrome.downloads.download({
     url: dataUrl,
     filename: path,
     saveAs: false,
     conflictAction: 'uniquify',
+  });
+  await waitForDownload(downloadId);
+  return downloadId;
+}
+
+function waitForDownload(downloadId) {
+  return new Promise((resolve, reject) => {
+    const onChanged = (delta) => {
+      if (delta.id !== downloadId) return;
+      const state = delta.state && delta.state.current;
+      if (state === 'complete') {
+        chrome.downloads.onChanged.removeListener(onChanged);
+        resolve();
+      } else if (state === 'interrupted') {
+        chrome.downloads.onChanged.removeListener(onChanged);
+        const reason = (delta.error && delta.error.current) || 'unknown';
+        reject(new Error(`Download interrupted: ${reason}`));
+      }
+    };
+    chrome.downloads.onChanged.addListener(onChanged);
   });
 }

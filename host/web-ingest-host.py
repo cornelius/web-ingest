@@ -8,6 +8,9 @@ Reads a single length-prefixed JSON message on stdin, writes the markdown
 payload to disk under WEB_INGEST_DIR (default ~/incoming/web), and replies
 with {ok, path} or {ok: false, error}.
 
+Optional fields on the incoming message:
+- comment: free-text note from the user, written to frontmatter when non-empty.
+
 Wire protocol: 4 bytes native-endian unsigned int (message length in bytes),
 then that many bytes of UTF-8 JSON. Both directions.
 
@@ -60,18 +63,24 @@ def slugify(text: str, max_len: int = 60) -> str:
 
 def yaml_escape(s: str) -> str:
     if s == "" or re.search(r'[:#\[\]{}",&*!|>%@`\n]', s) or s != s.strip():
-        return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+        escaped = s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
+        return '"' + escaped + '"'
     return s
 
 
-def build_frontmatter(title: str, url: str, clipped_at: str) -> str:
-    return (
-        "---\n"
-        f"title: {yaml_escape(title)}\n"
-        f"url: {yaml_escape(url)}\n"
-        f"clipped_at: {yaml_escape(clipped_at)}\n"
-        "---\n\n"
-    )
+def build_frontmatter(title: str, url: str, clipped_at: str, comment: str = "") -> str:
+    lines = [
+        "---",
+        f"title: {yaml_escape(title)}",
+        f"url: {yaml_escape(url)}",
+        f"clipped_at: {yaml_escape(clipped_at)}",
+    ]
+    if comment:
+        lines.append(f"comment: {yaml_escape(comment)}")
+    lines.append("---")
+    lines.append("")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def write_clip(msg: dict) -> Path:
@@ -82,12 +91,13 @@ def write_clip(msg: dict) -> Path:
     url = msg.get("url", "")
     clipped_at = msg.get("clipped_at") or datetime.now().isoformat(timespec="seconds")
     markdown = msg.get("markdown", "")
+    comment = (msg.get("comment") or "").strip()
 
     ts = datetime.now().strftime("%Y-%m-%d-%H%M")
     filename = f"{ts}--{slugify(title)}.md"
     path = out_dir / filename
 
-    path.write_text(build_frontmatter(title, url, clipped_at) + markdown, encoding="utf-8")
+    path.write_text(build_frontmatter(title, url, clipped_at, comment) + markdown, encoding="utf-8")
     return path
 
 

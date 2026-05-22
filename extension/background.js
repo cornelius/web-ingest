@@ -1,6 +1,22 @@
 const HOST_NAME = 'de.cornelius.web_ingest';
 const BADGE_DURATION_MS = 3000;
 
+async function syncPopup() {
+  const { askForComment } = await chrome.storage.sync.get({ askForComment: false });
+  await chrome.action.setPopup({ popup: askForComment ? 'popup.html' : '' });
+}
+
+chrome.runtime.onInstalled.addListener(syncPopup);
+chrome.runtime.onStartup.addListener(syncPopup);
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && 'askForComment' in changes) {
+    syncPopup();
+  }
+});
+
+// Fires only when default_popup is unset (askForComment === false).
+// The popup path is handled entirely in popup.js.
 chrome.action.onClicked.addListener(async (tab) => {
   if (!tab.id || !tab.url || !/^https?:/.test(tab.url)) {
     await flashBadge('SKIP', '#9e9e9e');

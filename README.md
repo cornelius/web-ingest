@@ -10,6 +10,7 @@ Chrome extension that clips the current web page as clean markdown to a local fo
 - One-click clip of an article-shaped page → clean markdown on disk
 - YAML frontmatter with title, source URL, and timestamp
 - Configurable output directory
+- Optional comment dialog before each clip (off by default)
 
 **Doesn't (yet):**
 - Selection-only clipping (it always extracts the whole article)
@@ -67,12 +68,17 @@ Open any article, click the *Web Ingest* toolbar icon. A green `OK` badge appear
 
 Files are named `YYYY-MM-DD-HHmm--<title-slug>.md`.
 
+### Adding a comment
+
+The default flow is silent — click the icon, get the file. If you'd rather jot a note alongside each clip, open `chrome://extensions`, find *Web Ingest*, click *Details* → *Extension options*, and enable *Ask for a comment when clipping*. Once on, clicking the toolbar icon opens a small popup with a title preview and a textarea; type a note (or leave it empty), then *Save* (or `Ctrl/Cmd+Enter`). The comment is stored as a `comment:` field in the YAML frontmatter; an empty comment is omitted. Press `Esc` or *Cancel* to skip the clip.
+
 ## Configuration
 
 | Knob | Default | Where |
 |---|---|---|
 | Output directory | `~/incoming/web/` | env var `WEB_INGEST_DIR` |
 | Log file | `~/.local/state/web-ingest/host.log` | hard-coded in host script |
+| Ask for a comment | off | extension options page (`chrome.storage.sync`) |
 
 ## Troubleshooting
 
@@ -85,8 +91,10 @@ Files are named `YYYY-MM-DD-HHmm--<title-slug>.md`.
 ```
 extension/        — Chrome MV3 extension
   manifest.json
-  background.js   — service worker; orchestrates clip + send
+  background.js   — service worker; silent-clip path + popup toggle
   clip.js         — injected into the page; runs Readability + Turndown
+  popup.{html,js} — comment dialog (shown when the option is on)
+  options.{html,js} — options page with the comment-dialog toggle
   lib/            — vendored Readability.js (Apache 2.0) and Turndown (MIT)
   icons/          — placeholder PNGs (replace with real ones any time)
 host/             — native messaging host

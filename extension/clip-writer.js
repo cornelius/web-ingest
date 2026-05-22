@@ -89,3 +89,13 @@ function waitForDownload(downloadId) {
     chrome.downloads.onChanged.addListener(onChanged);
   });
 }
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = {
+    slugify,
+    yamlEscape,
+    buildFrontmatter,
+    normalizeSubdir,
+    timestampForFilename,
+  };
+}

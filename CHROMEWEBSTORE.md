@@ -47,9 +47,13 @@ No host permissions are declared. The extension does not request `<all_urls>` or
 
 ## Privacy policy
 
-A privacy policy URL is required by the Chrome Web Store. The substance of the policy is: *Web Ingest processes the current page only when the user clicks the toolbar action. Page content is converted to Markdown locally and written to the user's Downloads folder. No data is transmitted off the device. The extension stores two preference values in `chrome.storage.sync`; no other data is retained.*
+Lives at `PRIVACY.md` in this repo. Public URL for the Web Store listing:
 
-Action item before submission: publish this text at a stable URL (project site, GitHub Pages, README anchor) and record the URL here.
+  https://github.com/cornelius/web-ingest/blob/main/PRIVACY.md
+
+Substance: Web Ingest processes the current page only when the user clicks the toolbar action. Page content is converted to Markdown locally and written to the user's Downloads folder. No data is transmitted off the device. The extension stores two preference values in `chrome.storage.sync`; no other data is retained.
+
+If the repository ever moves or the default branch is renamed, update both the URL above and the Web Store listing.
 
 ## Listing assets checklist
 
@@ -58,7 +62,7 @@ Action item before submission: publish this text at a stable URL (project site, 
 - [ ] At least one screenshot at 1280x800 or 640x400 showing a successful clip
 - [ ] Optional: marquee promotional tile (1400x560)
 - [ ] Support email
-- [ ] Privacy policy URL (see above)
+- [x] Privacy policy URL (https://github.com/cornelius/web-ingest/blob/main/PRIVACY.md)
 - [ ] Single-purpose statement copied from this file
 
 ## Open questions / rejection-recovery notes

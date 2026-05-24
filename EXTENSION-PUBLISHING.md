@@ -11,6 +11,14 @@ Tracking metadata, permission justifications, privacy stance, and per-store list
 - **Current version:** 0.1.0 (see `extension/manifest.json`)
 - **Category (proposed):** Productivity
 
+## Developer accounts
+
+Both stores require their own developer registration. Same address is used for both: as the account login, and as the public support email on each listing. A domain alias is used rather than Gmail so the address stays under the user's control; a generic prefix (`developer@`) rather than a project-specific one (`web-ingest@`) so the dev-account email still makes sense if later registrations cover Google Play, Workspace add-ons, Cloud projects, or non-Google stores.
+
+- **Email alias:** `developer@cornelius.tech` (forwards to the user's existing inbox)
+- **Chrome Web Store dev account:** not yet registered ($5 one-time fee)
+- **Microsoft Partner Center account:** not yet registered (free)
+
 ## Distribution status
 
 | Store | Status | Listing URL |
@@ -85,7 +93,7 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 - [x] Small promotional tile 440x280 (`store-assets/promo-small.png`)
 - [ ] At least one screenshot at 1280x800 or 640x400 showing a successful clip
 - [x] Marquee promotional tile 1400x560 (`store-assets/promo-marquee.png`)
-- [ ] Support email
+- [x] Support email: `developer@cornelius.tech` (see Developer accounts above)
 - [x] Privacy policy URL (above)
 - [x] Single-purpose statement (above)
 - [x] Permission justifications (above)
@@ -108,6 +116,7 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 - [ ] Screenshots (640x480 or 1280x800; same files as Chrome's listing)
 - [ ] YouTube video URL (optional)
 - [ ] Search terms (up to 7 terms / 21 words total)
+- [x] Support contact detail: `developer@cornelius.tech` (see Developer accounts above)
 - [x] Privacy policy URL (same as Chrome)
 
 ### Edge-specific declarations

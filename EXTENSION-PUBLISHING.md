@@ -82,9 +82,9 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 ### Listing assets checklist (Chrome)
 
 - [x] 128x128 store icon (`extension/icons/icon-128.png`; verify against the icon spec at submission time)
-- [ ] Small promotional tile (440x280)
+- [x] Small promotional tile 440x280 (`store-assets/promo-small.png`)
 - [ ] At least one screenshot at 1280x800 or 640x400 showing a successful clip
-- [ ] Optional: marquee promotional tile (1400x560)
+- [x] Marquee promotional tile 1400x560 (`store-assets/promo-marquee.png`)
 - [ ] Support email
 - [x] Privacy policy URL (above)
 - [x] Single-purpose statement (above)
@@ -103,8 +103,8 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 
 - [x] Extension logo (1:1, 300x300 recommended, 128x128 minimum; `extension/icons/icon-128.png` meets the minimum)
 - [x] Long description (>= 250 characters, see above)
-- [ ] Small promotional tile (440x280; same file as Chrome's)
-- [ ] Optional: large promotional tile (1400x560; same file as Chrome's)
+- [x] Small promotional tile 440x280 (`store-assets/promo-small.png`, same file as Chrome's)
+- [x] Large promotional tile 1400x560 (`store-assets/promo-marquee.png`, same file as Chrome's marquee)
 - [ ] Screenshots (640x480 or 1280x800; same files as Chrome's listing)
 - [ ] YouTube video URL (optional)
 - [ ] Search terms (up to 7 terms / 21 words total)

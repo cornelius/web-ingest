@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="440" height="280" viewBox="0 0 440 280">
+  <defs>
+    <linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="76" x2="0" y2="204">
+      <stop offset="0.000" stop-color="#054b9c"/>
+      <stop offset="0.125" stop-color="#0452a5"/>
+      <stop offset="0.250" stop-color="#0352a4"/>
+      <stop offset="0.375" stop-color="#024998"/>
+      <stop offset="0.500" stop-color="#01418e"/>
+      <stop offset="0.625" stop-color="#013c83"/>
+      <stop offset="0.750" stop-color="#013373"/>
+      <stop offset="0.875" stop-color="#012b64"/>
+      <stop offset="1.000" stop-color="#01295e"/>
+    </linearGradient>
+    <linearGradient id="fadeGrad" gradientUnits="userSpaceOnUse" x1="0" y1="76" x2="0" y2="114">
+      <stop offset="0" stop-color="black"/>
+      <stop offset="1" stop-color="white"/>
+    </linearGradient>
+    <mask id="fadeMask" maskUnits="userSpaceOnUse">
+      <rect x="24" y="76" width="128" height="128" fill="url(#fadeGrad)"/>
+    </mask>
+  </defs>
+  <rect width="440" height="280" fill="url(#bg)"/>
+  <image x="24" y="76" width="128" height="128" mask="url(#fadeMask)" xlink:href="../extension/icons/icon-128.png"/>
+  <text x="176" y="148" font-family="DejaVu Sans" font-size="40" font-weight="700" fill="#ffffff">Web Ingest</text>
+  <text x="176" y="180" font-family="DejaVu Sans" font-size="16" fill="#cfe0f5">Clip the web as Markdown</text>
+</svg>

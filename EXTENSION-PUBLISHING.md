@@ -13,11 +13,7 @@ Tracking metadata, permission justifications, privacy stance, and per-store list
 
 ## Developer accounts
 
-Both stores require their own developer registration. Same address is used for both: as the account login, and as the public support email on each listing. A domain alias is used rather than Gmail so the address stays under the user's control; a generic prefix (`developer@`) rather than a project-specific one (`web-ingest@`) so the dev-account email still makes sense if later registrations cover Google Play, Workspace add-ons, Cloud projects, or non-Google stores.
-
-- **Email alias:** `developer@cornelius.tech` (forwards to the user's existing inbox)
-- **Chrome Web Store dev account:** not yet registered ($5 one-time fee)
-- **Microsoft Partner Center account:** not yet registered (free)
+Support email and developer-account login on both stores: `developer@cornelius.tech`.
 
 ## Distribution status
 

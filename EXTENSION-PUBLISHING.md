@@ -87,7 +87,7 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 
 - [x] 128x128 store icon (`extension/icons/icon-128.png`; verify against the icon spec at submission time)
 - [x] Small promotional tile 440x280 (`store-assets/promo-small.png`)
-- [ ] At least one screenshot at 1280x800 or 640x400 showing a successful clip
+- [x] At least one screenshot at 1280x800 or 640x400 showing a successful clip (`store-assets/screenshots/`)
 - [x] Marquee promotional tile 1400x560 (`store-assets/promo-marquee.png`)
 - [x] Support email: `developer@cornelius.tech` (see Developer accounts above)
 - [x] Privacy policy URL (above)
@@ -109,7 +109,7 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 - [x] Long description (>= 250 characters, see above)
 - [x] Small promotional tile 440x280 (`store-assets/promo-small.png`, same file as Chrome's)
 - [x] Large promotional tile 1400x560 (`store-assets/promo-marquee.png`, same file as Chrome's marquee)
-- [ ] Screenshots (640x480 or 1280x800; same files as Chrome's listing)
+- [x] Screenshots (640x480 or 1280x800; same files as Chrome's listing, `store-assets/screenshots/`)
 - [ ] YouTube video URL (optional)
 - [ ] Search terms (up to 7 terms / 21 words total)
 - [x] Support contact detail: `developer@cornelius.tech` (see Developer accounts above)

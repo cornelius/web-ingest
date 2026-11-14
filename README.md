@@ -104,6 +104,7 @@ scripts/package.sh — builds the store upload zip (`make package`)
 store-assets/     — store listing tiles and screenshots, README banner
 ARCHITECTURE.md   — wire format, frontmatter schema, design notes
 PRIVACY.md        — privacy policy linked from the store listings
+CONTRIBUTING.md   — how to build, test and send changes
 EXTENSION-PUBLISHING.md — store listing content and submission checklist
 CHROMEWEBSTORE.md — pointer to EXTENSION-PUBLISHING.md
 ```

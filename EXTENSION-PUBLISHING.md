@@ -74,6 +74,18 @@ Lives at `PRIVACY.md` in this repo. Public URL used on each store listing:
 
 If the repository ever moves or the default branch is renamed, update the URL above and re-enter it on both store listings.
 
+## Building the package
+
+Both stores take the same zip of `extension/`. Bump `version` in `extension/manifest.json` first for every upload after the initial one; the stores reject a package whose version is not higher than the published one.
+
+```
+cd extension
+zip -r ../web-ingest-<version>.zip . -x '*.DS_Store'
+unzip -l ../web-ingest-<version>.zip
+```
+
+The listing should show `manifest.json`, `background.js`, `clip.js`, `clip-writer.js`, `popup.{html,js}`, `options.{html,js}`, `lib/`, `icons/` and nothing else. The zip is a build artifact: do not commit it, delete it after uploading.
+
 ---
 
 ## Chrome Web Store
@@ -93,6 +105,15 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 - [x] Privacy policy URL (above)
 - [x] Single-purpose statement (above)
 - [x] Permission justifications (above)
+
+### Dashboard fields (Chrome)
+
+The account needs 2-Step Verification before it can publish.
+
+- **Package:** upload the zip from "Building the package".
+- **Store listing tab:** long description (above), screenshots and both promo tiles from `store-assets/`, category Productivity, language English.
+- **Privacy practices tab:** single-purpose narrative, one justification per permission from the Permissions table, data usage "no data collected" with the limited-use certifications, privacy policy URL.
+- **Distribution tab:** visibility public, all regions.
 
 ---
 
@@ -123,6 +144,8 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 - **Data usage:** Select "No data collected", certify the limited-use disclosures.
 - **Visibility:** Public.
 - **Markets:** all (default).
+- **Properties:** category Productivity, website https://github.com/cornelius/web-ingest, support contact `developer@cornelius.tech`.
+- **Search terms (suggestions):** `markdown clipper`, `web clipper`, `readability`, `download as markdown`, `article archive`.
 
 ---
 

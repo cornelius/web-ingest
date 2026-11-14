@@ -54,17 +54,35 @@ chrome.action.onClicked.addListener(async (tab) => {
     await flashBadge(tabId, 'OK', '#4caf50');
   } catch (err) {
     console.error('[web-ingest] clip failed:', err);
-    await chrome.action.setTitle({ tabId, title: `Web Ingest - ${err.message}` });
+    await setTitle(tabId, `Web Ingest - ${err.message}`);
     await flashBadge(tabId, 'ERR', '#f44336');
   }
 });
 
+const badgeTimers = new Map();
+
+// Badge and title calls reject once the tab is closed; a clip finishing after that is not an error.
 async function flashBadge(tabId, text, color) {
-  await chrome.action.setBadgeText({ text, tabId });
-  await chrome.action.setBadgeBackgroundColor({ color, tabId });
-  setTimeout(() => chrome.action.setBadgeText({ text: '', tabId }), BADGE_DURATION_MS);
+  if (!tabId) return;
+  clearTimeout(badgeTimers.get(tabId));
+  try {
+    await chrome.action.setBadgeText({ text, tabId });
+    await chrome.action.setBadgeBackgroundColor({ color, tabId });
+  } catch {
+    badgeTimers.delete(tabId);
+    return;
+  }
+  badgeTimers.set(tabId, setTimeout(() => {
+    badgeTimers.delete(tabId);
+    chrome.action.setBadgeText({ text: '', tabId }).catch(() => {});
+  }, BADGE_DURATION_MS));
+}
+
+function setTitle(tabId, title) {
+  if (!tabId) return Promise.resolve();
+  return chrome.action.setTitle({ tabId, title }).catch(() => {});
 }
 
 function resetTitle(tabId) {
-  return chrome.action.setTitle({ tabId, title: DEFAULT_TITLE });
+  return setTitle(tabId, DEFAULT_TITLE);
 }

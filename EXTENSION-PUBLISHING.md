@@ -110,7 +110,7 @@ The account needs 2-Step Verification before it can publish.
 
 - **Package:** upload the zip from "Building the package".
 - **Store listing tab:** long description (above), screenshots and both promo tiles from `store-assets/`, category Productivity, language English.
-- **Privacy practices tab:** single-purpose narrative, one justification per permission from the Permissions table, data usage "no data collected" with the limited-use certifications, privacy policy URL.
+- **Privacy practices tab:** single-purpose narrative, one justification per permission from the Permissions table, data usage: tick only "Website content" (the clipped article, written to a local file, never transmitted) plus all three certifications, privacy policy URL.
 - **Distribution tab:** visibility public, all regions.
 
 ---

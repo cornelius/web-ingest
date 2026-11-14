@@ -6,7 +6,25 @@ const {
   buildFrontmatter,
   normalizeSubdir,
   timestampForFilename,
+  markdownDataUrl,
 } = require('../extension/clip-writer.js');
+
+const DATA_PREFIX = 'data:text/markdown;charset=utf-8,';
+
+function decodeDataUrl(url) {
+  assert.ok(url.startsWith(DATA_PREFIX));
+  return decodeURIComponent(url.slice(DATA_PREFIX.length));
+}
+
+test('markdownDataUrl round-trips text including astral characters', () => {
+  const text = '# Title\n\nCafé \u{1F600} 漢字';
+  assert.equal(decodeDataUrl(markdownDataUrl(text)), text);
+});
+
+test('markdownDataUrl replaces lone surrogates instead of throwing', () => {
+  const broken = 'a\uD83Db \uDE00c';
+  assert.equal(decodeDataUrl(markdownDataUrl(broken)), 'a�b �c');
+});
 
 test('slugify lowercases and joins words with single hyphens', () => {
   assert.equal(slugify('Hello World'), 'hello-world');

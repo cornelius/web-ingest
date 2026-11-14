@@ -42,6 +42,15 @@ function timestampForFilename(d) {
   return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}`;
 }
 
+// encodeURIComponent throws on unpaired surrogates, which badly encoded pages contain.
+function replaceLoneSurrogates(s) {
+  return s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '�');
+}
+
+function markdownDataUrl(content) {
+  return 'data:text/markdown;charset=utf-8,' + encodeURIComponent(replaceLoneSurrogates(content));
+}
+
 function normalizeSubdir(raw) {
   return (raw || '').trim().replace(/^\/+|\/+$/g, '');
 }
@@ -59,8 +68,7 @@ async function saveClip({ title, url, markdown, comment, subdir }) {
   const filename = `${timestampForFilename(clippedAt)}-${slugify(safeTitle)}.md`;
   const dir = normalizeSubdir(subdir);
   const path = dir ? `${dir}/${filename}` : filename;
-  const dataUrl =
-    'data:text/markdown;charset=utf-8,' + encodeURIComponent(content);
+  const dataUrl = markdownDataUrl(content);
 
   const downloadId = await chrome.downloads.download({
     url: dataUrl,
@@ -97,5 +105,6 @@ if (typeof module === 'object' && module.exports) {
     buildFrontmatter,
     normalizeSubdir,
     timestampForFilename,
+    markdownDataUrl,
   };
 }

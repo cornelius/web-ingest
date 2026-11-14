@@ -102,6 +102,7 @@ This writes `dist/web-ingest-<version>.zip` and prints its contents. The listing
 - [x] At least one screenshot at 1280x800 or 640x400 showing a successful clip (`store-assets/screenshots/`)
 - [x] Marquee promotional tile 1400x560 (`store-assets/promo-marquee.png`)
 - [x] Support email: `developer@cornelius.tech` (see Developer accounts above)
+- [x] Support URL: https://github.com/cornelius/web-ingest/issues
 - [x] Privacy policy URL (above)
 - [x] Single-purpose statement (above)
 - [x] Permission justifications (above)
@@ -111,7 +112,7 @@ This writes `dist/web-ingest-<version>.zip` and prints its contents. The listing
 The account needs 2-Step Verification before it can publish.
 
 - **Package:** upload the zip from "Building the package".
-- **Store listing tab:** long description (above), screenshots and both promo tiles from `store-assets/`, category Productivity, language English.
+- **Store listing tab:** long description (above), screenshots and both promo tiles from `store-assets/`, category Productivity, language English, support URL https://github.com/cornelius/web-ingest/issues.
 - **Privacy practices tab:**
   - Single purpose: the single-purpose narrative above.
   - Permission justifications: the Justification column of the Permissions table.

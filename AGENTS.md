@@ -13,7 +13,7 @@ A Chrome extension that clips web pages as markdown into a subdirectory of the u
 
 - Manifest V3 — no remote code, ephemeral service workers, no `eval`. Vendor any new library into `extension/lib/`.
 - After changing files, the unpacked extension at `chrome://extensions` needs to be reloaded (the circular-arrow icon, or disable + re-enable).
-- DOM extraction runs in the page's world via `chrome.scripting.executeScript`. The three injected files (`lib/readability.js`, `lib/turndown.js`, `clip.js`) share scope; later files see globals set by earlier ones.
+- DOM extraction runs in the tab via `chrome.scripting.executeScript`, in the extension's isolated world (the default), not the page's own JavaScript world. The three injected files (`lib/readability.js`, `lib/turndown.js`, `clip.js`) share that world; later files see globals set by earlier ones.
 - The service worker can't use `URL.createObjectURL`. `clip-writer.js` encodes clip content as a `data:` URL for `chrome.downloads.download`; keep it that way unless you also add an offscreen document.
 - `clip-writer.js` is shared between the service worker (`importScripts('clip-writer.js')`), the popup and the options page (`<script src="clip-writer.js">`). Keep it free of DOM dependencies so all three contexts can load it.
 

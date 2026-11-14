@@ -68,16 +68,16 @@ The final on-disk path is `<Chrome's Downloads dir>/<subdir>/YYYYMMDDTHHmm-<slug
 
 ## Why this shape
 
-The previous design used a native-messaging host (a small Python script) to write files to any path the user chose. That was more flexible (`~/incoming/web/`, env-var overrides) but cost the user a per-machine install step: dropping a JSON manifest into `~/.config/google-chrome/NativeMessagingHosts/` and keeping its `allowed_origins` in sync with the loaded extension's ID. Moving to `chrome.downloads` removes the host process, the install script, the Chrome-side native-messaging manifest, and the extension-ID coupling, at the cost of being locked to the Downloads tree.
+Writing through `chrome.downloads` needs no companion process and no per-machine install step, at the cost of being limited to the Downloads tree.
 
 ## Design notes / gotchas
 
-- **Service workers can't use `URL.createObjectURL`.** MV3 service workers don't have the Blob URL machinery, so we encode the markdown as a `data:` URL with `encodeURIComponent`. For typical articles (~10-100 KB of markdown) this is fine; for very large pages the encoded URL stays well under Chrome's `data:` URL practical ceiling.
+- **Service workers can't use `URL.createObjectURL`.** MV3 service workers don't have the Blob URL machinery, so we encode the markdown as a `data:` URL with `encodeURIComponent`. Percent-encoding inflates non-ASCII text up to threefold, and the largest `data:` URL Chrome accepts here has not been measured, so a very large page in a non-Latin script is the case most likely to fail.
 - **`chrome.downloads.download` surfaces every clip in Chrome's download tray.** There's no per-extension way to suppress this in MV3. `chrome.downloads.setShelfEnabled(false)` is global and gated behind a permission we deliberately don't ask for.
 - **Filename validation is Chrome's.** Forward slashes are interpreted as directory separators. `..` segments and absolute paths (`/foo`) are rejected. Bad input produces a runtime error visible in the service-worker console.
-- **`chrome.action.setPopup` is re-applied from storage, never decided per click.** The worker re-syncs it from storage each time it starts, on `onInstalled` and `onStartup`, and on `storage.onChanged`, so it holds whatever Chrome keeps across restarts and extension reloads - not in the click handler, which would race with Chrome's own decision to open the popup or fire `onClicked`.
+- **`chrome.action.setPopup` is re-applied from storage, never decided per click.** The worker re-syncs it from storage each time it starts, on `onInstalled` and `onStartup`, and on `storage.onChanged`, so it holds whatever Chrome keeps across restarts and extension reloads. It is never set in the click handler, which would race with Chrome's own decision to open the popup or fire `onClicked`.
 - **No remote code in MV3.** Readability and Turndown must be vendored, not loaded from a CDN. They are.
-- **Readability does best on article-shaped pages.** Search results, social feeds, and dashboards will produce poor markdown or nothing. The grey `SKIP` badge handles `chrome://` / `about:` pages but not "this page is structurally not an article" — those will produce a red `ERR` badge.
+- **Readability does best on article-shaped pages.** Search results, social feeds, and dashboards will produce poor markdown or nothing. The grey `SKIP` badge handles pages that are not http(s) (`chrome://`, `about:`, `file://`) but not "this page is structurally not an article" — those will produce a red `ERR` badge.
 - **Manifest-V3 service workers are ephemeral.** Don't store state in `background.js` globals — they get reaped between events. The extension is currently stateless aside from `chrome.storage.sync`.
 - **Action badge and title are per-tab.** Every `setBadgeText` / `setBadgeBackgroundColor` / `setTitle` call passes `tabId`, so clipping in tab A and switching to tab B leaves B with its own state. A failed clip puts the error message on the toolbar tooltip via `setTitle`, so the user can hover the icon instead of opening the service-worker console.
 

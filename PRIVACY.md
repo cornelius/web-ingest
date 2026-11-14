@@ -7,7 +7,7 @@ Web Ingest is a Chrome extension that converts the current web page to a Markdow
 ## What the extension does NOT do
 
 - **No network requests.** The extension does not contact any server — not the developer's, not a third party's, not anywhere. All article extraction, Markdown conversion, and file writing happen locally in your browser.
-- **No analytics, no telemetry, no third-party scripts.** Mozilla Readability and Turndown are bundled with the extension and run entirely in the page's context.
+- **No analytics, no telemetry, no third-party scripts.** Mozilla Readability and Turndown are bundled with the extension and run entirely in your browser, inside the tab you clip.
 - **No data collected, transmitted, or shared with anyone, ever.**
 
 ## Data the extension creates on your machine

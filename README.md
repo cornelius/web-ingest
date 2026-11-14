@@ -16,7 +16,7 @@ Chrome extension that clips the current web page as clean markdown to a folder u
 - Selection-only clipping (it always extracts the whole article)
 - Per-domain extraction tweaks
 - Firefox (different download/extension APIs)
-- Anything on `chrome://`, `about:`, or non-article pages (search results, social feeds, dashboards) — Readability gives up and you get an `ERR` badge
+- Non-article pages (search results, social feeds, dashboards): Readability gives up and you get an `ERR` badge. Pages that are not http(s), such as `chrome://`, `about:` or `file://`, get a grey `SKIP` badge instead
 - Writing outside the Downloads tree — Chrome's `downloads` API only allows paths under your configured Downloads folder
 
 ## How it works
@@ -25,7 +25,7 @@ Chrome extension that clips the current web page as clean markdown to a folder u
 extension (Chrome) ──chrome.downloads──▶ <Downloads>/web-clips/*.md
 ```
 
-The extension extracts the article using Mozilla Readability and converts the HTML to markdown using Turndown. It builds the YAML frontmatter and filename inside the service worker (`clip-writer.js`), encodes the result as a `data:` URL, and hands it to `chrome.downloads.download`. Chrome writes the file to a subdirectory of your Downloads folder.
+The extension extracts the article using Mozilla Readability and converts the HTML to markdown using Turndown. It builds the YAML frontmatter and filename with `clip-writer.js`, in the service worker or, when the comment dialog is on, in the popup, encodes the result as a `data:` URL, and hands it to `chrome.downloads.download`. Chrome writes the file to a subdirectory of your Downloads folder.
 
 ## Install
 
@@ -83,9 +83,9 @@ The actual Downloads location is whatever Chrome is configured to use (`chrome:/
 
 ## Troubleshooting
 
-- **Red `ERR` badge:** open `chrome://extensions`, find *Web Ingest*, click *service worker* and check the console.
+- **Red `ERR` badge:** hover over the toolbar icon to see the reason. For more detail, open `chrome://extensions`, find *Web Ingest*, click *service worker* and check the console.
 - **Each clip shows a download notification:** Chrome surfaces every download in its tray. There's no per-extension way to suppress this in MV3; turning off the tray globally in `chrome://settings` mutes it for all downloads, not just clips.
-- **`chrome://` or `about:` pages:** the extension can't extract from them; you'll get a grey `SKIP` badge.
+- **Pages that are not http(s)** (`chrome://`, `about:`, `file://`): the extension does not clip them; you get a grey `SKIP` badge.
 
 ## Repo layout
 

@@ -79,12 +79,10 @@ If the repository ever moves or the default branch is renamed, update the URL ab
 Both stores take the same zip of `extension/`. Bump `version` in `extension/manifest.json` first for every upload after the initial one; the stores reject a package whose version is not higher than the published one.
 
 ```
-cd extension
-zip -r ../web-ingest-<version>.zip . -x '*.DS_Store'
-unzip -l ../web-ingest-<version>.zip
+make package
 ```
 
-The listing should show `manifest.json`, `background.js`, `clip.js`, `clip-writer.js`, `popup.{html,js}`, `options.{html,js}`, `lib/`, `icons/` and nothing else. The zip is a build artifact: do not commit it, delete it after uploading.
+This writes `dist/web-ingest-<version>.zip` and prints its contents. The listing should show `manifest.json`, `background.js`, `clip.js`, `clip-writer.js`, `popup.{html,js}`, `options.{html,js}`, `lib/`, `icons/` and nothing else. `dist/` is ignored by git; `make clean` removes the zip after uploading.
 
 ---
 

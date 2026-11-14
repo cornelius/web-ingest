@@ -99,7 +99,8 @@ extension/        — Chrome MV3 extension
   options.{html,js} — options page: subdirectory + comment toggle
   lib/            — vendored Readability.js (Apache 2.0) and Turndown (MIT)
   icons/          — toolbar and store icons (pixel-art whale)
-tests/            — node:test unit tests for clip-writer (`npm test`)
+tests/            — node:test unit tests for clip-writer (`make test`)
+scripts/package.sh — builds the store upload zip (`make package`)
 store-assets/     — store listing tiles and screenshots, README banner
 ARCHITECTURE.md   — wire format, frontmatter schema, design notes
 PRIVACY.md        — privacy policy linked from the store listings

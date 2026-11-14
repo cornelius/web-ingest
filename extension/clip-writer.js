@@ -2,6 +2,7 @@
 // Owns filename + frontmatter generation and the chrome.downloads call.
 
 const SLUG_MAX_LEN = 60;
+const DOWNLOAD_TIMEOUT_MS = 30000;
 // Keeps timestamp + slug + ".md" + a uniquify suffix under the 255-byte filename limit.
 const SLUG_MAX_BYTES = 200;
 
@@ -97,21 +98,33 @@ async function saveClip({ title, url, markdown, comment, subdir }) {
   return downloadId;
 }
 
-function waitForDownload(downloadId) {
+function waitForDownload(downloadId, timeoutMs = DOWNLOAD_TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
+    let settled = false;
+    let timer;
+    const finish = (err) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      chrome.downloads.onChanged.removeListener(onChanged);
+      if (err) reject(err);
+      else resolve();
+    };
+    const settleFrom = (state, error) => {
+      if (state === 'complete') finish();
+      else if (state === 'interrupted') finish(new Error(`Download interrupted: ${error || 'unknown'}`));
+    };
     const onChanged = (delta) => {
       if (delta.id !== downloadId) return;
-      const state = delta.state && delta.state.current;
-      if (state === 'complete') {
-        chrome.downloads.onChanged.removeListener(onChanged);
-        resolve();
-      } else if (state === 'interrupted') {
-        chrome.downloads.onChanged.removeListener(onChanged);
-        const reason = (delta.error && delta.error.current) || 'unknown';
-        reject(new Error(`Download interrupted: ${reason}`));
-      }
+      settleFrom(delta.state && delta.state.current, delta.error && delta.error.current);
     };
     chrome.downloads.onChanged.addListener(onChanged);
+    timer = setTimeout(() => finish(new Error('Download did not finish in time')), timeoutMs);
+    // The download may already have finished before the listener was attached.
+    chrome.downloads.search({ id: downloadId }).then(
+      ([item]) => { if (item) settleFrom(item.state, item.error); },
+      () => {}
+    );
   });
 }
 
@@ -123,5 +136,6 @@ if (typeof module === 'object' && module.exports) {
     normalizeSubdir,
     timestampForFilename,
     markdownDataUrl,
+    waitForDownload,
   };
 }

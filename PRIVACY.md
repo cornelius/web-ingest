@@ -1,6 +1,6 @@
 # Privacy Policy
 
-*Last updated: 2026-05-23*
+*Last updated: 2026-11-14*
 
 Web Ingest is a Chrome extension that converts the current web page to a Markdown file and writes it to a folder under your Downloads directory. This policy describes what the extension does and does not do with your data.
 
@@ -38,6 +38,10 @@ None of these permissions are used for anything other than the actions described
 - Disable or uninstall the extension at `chrome://extensions` at any time.
 - Clear preferences by uninstalling the extension (or by editing `chrome.storage.sync` from the developer console).
 - Delete clip files like any other file in your Downloads folder.
+
+## Chrome Web Store User Data Policy
+
+The use of information handled by Web Ingest adheres to the [Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/), including the [Limited Use](https://developer.chrome.com/docs/webstore/program-policies/limited-use) requirements.
 
 ## Contact
 

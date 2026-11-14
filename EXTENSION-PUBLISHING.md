@@ -45,12 +45,14 @@ Web Ingest does one thing: clip the current page to a local Markdown file. It do
 
 ## Permissions
 
-| Permission | Required because | Surface |
+The justification column is the text entered on the Chrome dashboard, one field per permission.
+
+| Permission | Justification | Surface |
 |---|---|---|
-| `downloads` | Writes the Markdown file to the user's Downloads folder via `chrome.downloads.download` (the only file-write API available to MV3 extensions without a native host). | `extension/clip-writer.js` |
-| `activeTab` | Reads the URL of the tab the user just clicked the action on, and authorizes the one-shot script injection that follows. Used in lieu of `<all_urls>` to keep the access click-driven. | `extension/background.js`, `extension/popup.js` |
-| `scripting` | Injects `lib/readability.js`, `lib/turndown.js`, and `clip.js` into the active tab via `chrome.scripting.executeScript` to extract and convert the article. Required pair for the `activeTab` model. | `extension/background.js`, `extension/popup.js` |
-| `storage` | Persists user preferences (`subdir`, `askForComment`) via `chrome.storage.sync` so they survive browser restart and follow the user across signed-in profiles. | `extension/options.js`, `extension/background.js`, `extension/popup.js` |
+| `downloads` | Writes the clipped Markdown file to a folder under the user's Downloads directory via chrome.downloads.download. This is the only way for a Manifest V3 extension to write a file to disk without a native companion app. | `extension/clip-writer.js` |
+| `activeTab` | Gives temporary access to the tab the user clicked the toolbar button on: its URL and title for the file's frontmatter, and permission for the one-time script injection that extracts the article. Used instead of host permissions so access only ever happens on an explicit user click. | `extension/background.js`, `extension/popup.js` |
+| `scripting` | Injects the bundled Readability, Turndown and clip.js scripts into the active tab with chrome.scripting.executeScript to extract the article and convert it to Markdown. All scripts are packaged with the extension; no remote code is loaded. Works together with activeTab. | `extension/background.js`, `extension/popup.js` |
+| `storage` | Stores the user's two settings (the output subdirectory and whether to ask for a comment before saving) in chrome.storage.sync so they survive browser restarts. No page content or browsing data is stored. | `extension/options.js`, `extension/background.js`, `extension/popup.js` |
 
 No host permissions are declared. The extension does not request `<all_urls>` or any specific origin.
 
@@ -110,7 +112,12 @@ The account needs 2-Step Verification before it can publish.
 
 - **Package:** upload the zip from "Building the package".
 - **Store listing tab:** long description (above), screenshots and both promo tiles from `store-assets/`, category Productivity, language English.
-- **Privacy practices tab:** single-purpose narrative, one justification per permission from the Permissions table, data usage: tick only "Website content" (the clipped article, written to a local file, never transmitted) plus all three certifications, privacy policy URL.
+- **Privacy practices tab:**
+  - Single purpose: the single-purpose narrative above.
+  - Permission justifications: the Justification column of the Permissions table.
+  - Data usage: only "Website content" ticked (the clipped article, written to a local file, never transmitted). Personally identifiable information, health, financial, authentication, personal communications, location, web history and user activity stay unticked. "Web history" does not apply: the extension records only the one page the user chooses to clip, not the pages they visit.
+  - All three certifications ticked: no selling or transferring user data outside the approved use cases, no use unrelated to the single purpose, no use for creditworthiness or lending.
+  - Privacy policy URL (above).
 - **Distribution tab:** visibility public, all regions.
 
 ---

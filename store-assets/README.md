@@ -10,6 +10,8 @@ Promotional graphics uploaded to the Chrome Web Store and Microsoft Edge Add-ons
 | `promo-marquee.png` | 1400 × 560 | Chrome marquee promotional tile, Edge large promotional tile |
 | `promo-small.svg` | source | rasterized to `promo-small.png` |
 | `promo-marquee.svg` | source | rasterized to `promo-marquee.png` |
+| `readme-banner.png` | 1400 × 340 | banner heading the repo README; vertical crop of `promo-marquee.png` |
+| `screenshots/` | 1280 × 800 | Chrome and Edge listing screenshots; the first also illustrates the repo README |
 
 The SVGs reference `../extension/icons/icon-128.png` as the whale image; that file is the canonical icon and the source for the tile's branded element.
 
@@ -21,6 +23,12 @@ Requires Inkscape 1.x.
 cd store-assets
 inkscape promo-small.svg   --export-type=png --export-filename=promo-small.png   --export-width=440
 inkscape promo-marquee.svg --export-type=png --export-filename=promo-marquee.png --export-width=1400
+```
+
+The README banner is cut from the rendered marquee (ImageMagick):
+
+```
+convert promo-marquee.png -crop 1400x340+0+110 +repage readme-banner.png
 ```
 
 ## Design notes

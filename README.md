@@ -1,8 +1,10 @@
-# Web Ingest
+# ![Web Ingest: clip the web as Markdown](store-assets/readme-banner.png)
 
 Chrome extension that clips the current web page as clean markdown to a folder under your Downloads directory. No application launch, no cloud round-trip, no companion process — the markdown lands on disk through Chrome's own download mechanism.
 
-> **Status:** v0.1 — works for one user (the author) on one Linux box. Useful but rough; expect missing edge cases.
+![A Wikipedia article just clipped: the green OK badge on the toolbar icon and the new Markdown file in Chrome's download bubble](store-assets/screenshots/screenshot-01-clip.png)
+
+> **Status:** early version; expect rough edges on unusual pages.
 
 ## What it does (and doesn't)
 
@@ -29,6 +31,8 @@ The extension extracts the article using Mozilla Readability and converts the HT
 
 ## Install
 
+### From source
+
 Prerequisites: Google Chrome (or Chromium).
 
 1. **Clone the repo.**
@@ -41,17 +45,28 @@ Prerequisites: Google Chrome (or Chromium).
    - Open `chrome://extensions`, enable *Developer mode* (top-right toggle).
    - Click *Load unpacked* and select the `extension/` folder.
 
-That's it — there's no host process to register and no install script to run.
-
-3. **(Optional) Pick a different output subdirectory.**
-
-   Default is `<Downloads>/web-clips/`. To change it, open `chrome://extensions` → *Web Ingest* → *Details* → *Extension options*, and fill in *Subdirectory under Downloads*. Forward slashes nest further (`notes/web` writes to `<Downloads>/notes/web/`). Leave the field empty to write directly into Downloads.
-
 ## Usage
 
 Open any article, click the *Web Ingest* toolbar icon. A green `OK` badge appears for ~3 seconds when the file has been written; a red `ERR` badge means something went wrong (open the service-worker console at `chrome://extensions` for details).
 
 Files are named `YYYYMMDDTHHmm-<title-slug>.md` (ISO 8601 basic format). If two clips collide on the same filename, Chrome appends `(1)`, `(2)`, etc.
+
+The start of a clip of the Wikipedia article on Mozart, `20261114T1421-wolfgang-amadeus-mozart.md` (links shortened):
+
+```markdown
+---
+title: "Wolfgang Amadeus Mozart"
+url: "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart"
+clipped_at: "2026-11-14T13:21:59.517Z"
+comment: "Great musician."
+---
+
+Wolfgang Amadeus Mozart
+
+[...]
+
+**Wolfgang Amadeus Mozart** (27 January 1756 – 5 December 1791) was a [Classical](https://en.wikipedia.org/wiki/Classical_period_\(music\) "Classical period (music)") composer and musician.
+```
 
 ### Adding a comment
 
@@ -63,6 +78,8 @@ The default flow is silent — click the icon, get the file. If you'd rather jot
 |---|---|---|
 | Subdirectory under Downloads | `web-clips` | extension options page (`chrome.storage.sync`) |
 | Ask for a comment | off | extension options page (`chrome.storage.sync`) |
+
+To open the options page: `chrome://extensions` → *Web Ingest* → *Details* → *Extension options*. In *Subdirectory under Downloads*, forward slashes nest further (`notes/web` writes to `<Downloads>/notes/web/`); leave the field empty to write directly into Downloads.
 
 The actual Downloads location is whatever Chrome is configured to use (`chrome://settings/downloads`).
 
@@ -85,7 +102,7 @@ extension/        — Chrome MV3 extension
   lib/            — vendored Readability.js (Apache 2.0) and Turndown (MIT)
   icons/          — toolbar and store icons (pixel-art whale)
 tests/            — node:test unit tests for clip-writer (`npm test`)
-store-assets/     — promotional tiles for the store listings
+store-assets/     — store listing tiles and screenshots, README banner
 ARCHITECTURE.md   — wire format, frontmatter schema, design notes
 PRIVACY.md        — privacy policy linked from the store listings
 EXTENSION-PUBLISHING.md — store listing content and submission checklist

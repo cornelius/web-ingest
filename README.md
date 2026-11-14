@@ -1,6 +1,6 @@
 # ![Web Ingest: clip the web as Markdown](store-assets/readme-banner.png)
 
-Chrome extension that clips the current web page as clean markdown to a folder under your Downloads directory. No application launch, no cloud round-trip, no companion process — the markdown lands on disk through Chrome's own download mechanism.
+Web Ingest is a Chrome extension that clips the current web page as clean markdown to a folder under your Downloads directory. No application launch, no cloud round-trip, no companion process — the markdown lands on disk through Chrome's own download mechanism.
 
 ![A Wikipedia article just clipped: the green OK badge on the toolbar icon and the new Markdown file in Chrome's download bubble](store-assets/screenshots/screenshot-01-clip.png)
 

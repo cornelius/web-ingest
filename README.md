@@ -4,8 +4,6 @@ Chrome extension that clips the current web page as clean markdown to a folder u
 
 ![A Wikipedia article just clipped: the green OK badge on the toolbar icon and the new Markdown file in Chrome's download bubble](store-assets/screenshots/screenshot-01-clip.png)
 
-> **Status:** early version; expect rough edges on unusual pages.
-
 ## What it does (and doesn't)
 
 **Does:**

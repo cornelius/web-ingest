@@ -73,7 +73,29 @@ function normalizeSubdir(raw) {
   return (raw || '').trim().replace(/^\/+|\/+$/g, '');
 }
 
+// Returns an error message for a subdirectory chrome.downloads would reject, or null.
+function validateSubdir(raw) {
+  const v = normalizeSubdir(raw);
+  if (!v) return null;
+  if (v.includes('\\')) return 'Use forward slashes, not backslashes.';
+  if (/[\x00-\x1f]/.test(v)) return 'Control characters are not allowed.';
+  if (/[<>:"|?*]/.test(v)) return 'These characters are not allowed: < > : " | ? *';
+  for (const p of v.split('/')) {
+    if (p === '' || p === '.' || p === '..') {
+      return 'Path segments cannot be empty, ".", or "..".';
+    }
+    if (/^\s|[\s.]$/.test(p)) {
+      return 'Path segments cannot start with a space or end with a space or dot.';
+    }
+  }
+  return null;
+}
+
 async function saveClip({ title, url, markdown, comment, subdir }) {
+  const subdirError = validateSubdir(subdir);
+  if (subdirError) {
+    throw new Error(`Invalid subdirectory "${subdir}" - ${subdirError}`);
+  }
   const safeTitle = title || 'untitled';
   const clippedAt = new Date();
   const frontmatter = buildFrontmatter({
@@ -134,6 +156,7 @@ if (typeof module === 'object' && module.exports) {
     yamlEscape,
     buildFrontmatter,
     normalizeSubdir,
+    validateSubdir,
     timestampForFilename,
     markdownDataUrl,
     waitForDownload,

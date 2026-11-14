@@ -64,7 +64,7 @@ YAML strings are *always* double-quoted, regardless of content. The "only quote 
 
 The final on-disk path is `<Chrome's Downloads dir>/<subdir>/YYYYMMDDTHHmm-<slug>.md`. The extension cannot write outside the Downloads tree — that's a `chrome.downloads` API constraint, not a config choice.
 
-`subdir` may contain forward slashes to nest further (e.g. `notes/web` → `<Downloads>/notes/web/`). Leading and trailing slashes are stripped. Empty means write directly into Downloads. The options page validates input on every keystroke (debounced 300 ms before persisting) and rejects backslashes, control characters, and `.`/`..` segments before they reach the download API — bad values surface as inline error text under the field, not as a generic `ERR` badge a clip later.
+`subdir` may contain forward slashes to nest further (e.g. `notes/web` → `<Downloads>/notes/web/`). Leading and trailing slashes are stripped. Empty means write directly into Downloads. The options page validates input on every keystroke (debounced 300 ms before persisting) and rejects backslashes, control characters, the characters `< > : " | ? *`, empty or `.`/`..` segments, and segments that start with a space or end with a space or dot. Bad values surface as inline error text under the field. `saveClip` runs the same check (`validateSubdir` in `clip-writer.js`), so a bad value arriving through sync from another device fails with a message naming the subdirectory.
 
 ## Why this shape
 

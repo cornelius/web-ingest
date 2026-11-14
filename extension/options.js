@@ -13,20 +13,6 @@ function showSaved() {
   savedTimer = setTimeout(() => { saved.textContent = ''; }, 1500);
 }
 
-function validateSubdir(raw) {
-  const v = (raw || '').trim();
-  if (!v) return null;
-  if (v.includes('\\')) return 'Use forward slashes, not backslashes.';
-  if (/[\x00-\x1f]/.test(v)) return 'Control characters are not allowed.';
-  const parts = v.replace(/^\/+|\/+$/g, '').split('/');
-  for (const p of parts) {
-    if (p === '' || p === '.' || p === '..') {
-      return 'Path segments cannot be empty, ".", or "..".';
-    }
-  }
-  return null;
-}
-
 let saveTimer;
 function scheduleSaveSubdir() {
   clearTimeout(saveTimer);

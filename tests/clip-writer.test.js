@@ -5,6 +5,7 @@ const {
   yamlEscape,
   buildFrontmatter,
   normalizeSubdir,
+  validateSubdir,
   timestampForFilename,
   markdownDataUrl,
 } = require('../extension/clip-writer.js');
@@ -159,4 +160,18 @@ test('timestampForFilename uses ISO 8601 basic format in local time', () => {
 test('timestampForFilename zero-pads single-digit components', () => {
   const d = new Date(2026, 0, 3, 4, 7);
   assert.equal(timestampForFilename(d), '20260103T0407');
+});
+
+test('validateSubdir accepts empty and ordinary nested paths', () => {
+  assert.equal(validateSubdir(''), null);
+  assert.equal(validateSubdir(undefined), null);
+  assert.equal(validateSubdir('web-clips'), null);
+  assert.equal(validateSubdir('/notes/web/'), null);
+  assert.equal(validateSubdir('Notizen/Web Clips'), null);
+});
+
+test('validateSubdir rejects paths chrome.downloads would refuse', () => {
+  for (const bad of ['a\\b', 'a\x01b', 'a/../b', 'a//b', './a', 'a:b', 'a?', 'a*b', 'a<b', 'a|b', 'a"b', 'dir./x', 'dir /x', 'a/ b']) {
+    assert.notEqual(validateSubdir(bad), null, `expected ${JSON.stringify(bad)} to be rejected`);
+  }
 });

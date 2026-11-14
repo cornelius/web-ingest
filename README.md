@@ -83,7 +83,7 @@ extension/        — Chrome MV3 extension
   popup.{html,js} — comment dialog (shown when the option is on)
   options.{html,js} — options page: subdirectory + comment toggle
   lib/            — vendored Readability.js (Apache 2.0) and Turndown (MIT)
-  icons/          — placeholder PNGs (replace with real ones any time)
+  icons/          — toolbar and store icons (pixel-art whale)
 ARCHITECTURE.md   — wire format, frontmatter schema, design notes
 ```
 

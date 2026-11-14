@@ -9,6 +9,7 @@ async function syncPopup() {
   await chrome.action.setPopup({ popup: askForComment ? 'popup.html' : '' });
 }
 
+syncPopup();
 chrome.runtime.onInstalled.addListener(syncPopup);
 chrome.runtime.onStartup.addListener(syncPopup);
 

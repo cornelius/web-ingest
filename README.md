@@ -87,6 +87,10 @@ extension/        — Chrome MV3 extension
 ARCHITECTURE.md   — wire format, frontmatter schema, design notes
 ```
 
+## Privacy
+
+The extension collects nothing and makes no network requests. See the [privacy policy](PRIVACY.md).
+
 ## License
 
 Code in this repo: MIT (see `LICENSE`). Vendored libraries retain their own licenses (see `extension/lib/LICENSES.md`).

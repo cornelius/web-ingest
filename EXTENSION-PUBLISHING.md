@@ -19,8 +19,8 @@ Support email and developer-account login on both stores: `developer@cornelius.t
 
 | Store | Status | Listing URL |
 |---|---|---|
-| Chrome Web Store | Not yet submitted | (TBD after submission) |
-| Microsoft Edge Add-ons | Not yet submitted | (TBD after submission) |
+| Chrome Web Store | Submitted 2026-11-14, in review | (TBD after approval) |
+| Microsoft Edge Add-ons | Not yet submitted, deferred | (TBD after submission) |
 | GitHub (unpacked load) | Available | https://github.com/cornelius/web-ingest |
 
 ## Short description (manifest `description`, surfaced as the listing short description)

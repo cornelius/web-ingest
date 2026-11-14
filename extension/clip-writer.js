@@ -2,12 +2,29 @@
 // Owns filename + frontmatter generation and the chrome.downloads call.
 
 const SLUG_MAX_LEN = 60;
+// Keeps timestamp + slug + ".md" + a uniquify suffix under the 255-byte filename limit.
+const SLUG_MAX_BYTES = 200;
+
+function utf8Length(codePoint) {
+  const cp = codePoint.codePointAt(0);
+  if (cp < 0x80) return 1;
+  if (cp < 0x800) return 2;
+  if (cp < 0x10000) return 3;
+  return 4;
+}
 
 function slugify(text) {
   if (!text) return 'untitled';
-  let s = text.replace(/[^\p{L}\p{N}\s_-]/gu, '').trim().toLowerCase();
+  let s = text.normalize('NFC').replace(/[^\p{L}\p{M}\p{N}\s_-]/gu, '').trim().toLowerCase();
   s = s.replace(/[\s_-]+/g, '-');
-  s = Array.from(s).slice(0, SLUG_MAX_LEN).join('').replace(/^-+|-+$/g, '');
+  const kept = [];
+  let bytes = 0;
+  for (const cp of Array.from(s).slice(0, SLUG_MAX_LEN)) {
+    bytes += utf8Length(cp);
+    if (bytes > SLUG_MAX_BYTES) break;
+    kept.push(cp);
+  }
+  s = kept.join('').replace(/^-+|-+$/g, '');
   return s || 'untitled';
 }
 

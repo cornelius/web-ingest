@@ -33,7 +33,7 @@ Optional comment dialog: when the `askForComment` setting (in `chrome.storage.sy
 
 ## Filename and content
 
-Filename: `YYYYMMDDTHHmm-<title-slug>.md` where the slug is lowercase, Unicode letter/digit/hyphen only (using `\p{L}\p{N}` in JS regex), max 60 *code points* (iterated via `Array.from` so a supplementary-plane character at the cap boundary never leaves a lone surrogate in the filename). The timestamp is ISO 8601 basic format (no separators in date or time) so the filename is parseable as ISO 8601 and safe on every filesystem. Times are in the user's local timezone.
+Filename: `YYYYMMDDTHHmm-<title-slug>.md` where the slug is the NFC-normalized, lowercased title reduced to Unicode letters, combining marks, digits and hyphens (`\p{L}\p{M}\p{N}`), capped at 60 code points and 200 UTF-8 bytes so the filename stays under the 255-byte limit of common filesystems. Truncation works on code points, so it never leaves a lone surrogate. The timestamp is ISO 8601 basic format (no separators in date or time) so the filename is parseable as ISO 8601 and safe on every filesystem. Times are in the user's local timezone.
 
 Collisions: `chrome.downloads.download` is called with `conflictAction: 'uniquify'`, so Chrome appends ` (1)`, ` (2)`, etc. for filename collisions instead of overwriting.
 

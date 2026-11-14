@@ -50,14 +50,24 @@ test('slugify caps at 60 characters', () => {
 });
 
 test('slugify truncates at code-point boundaries, not surrogates', () => {
-  // U+20000 is a supplementary-plane CJK letter (two utf-16 code units).
-  // Sixty of them: 60 code points, 120 code units.
-  const sixty = '\u{20000}'.repeat(60);
-  const overflow = sixty + 'x';
-  const result = slugify(overflow);
-  assert.equal(Array.from(result).length, 60);
-  // No lone surrogates.
-  assert.equal(result, sixty);
+  // U+20000 is a supplementary-plane CJK letter: two utf-16 code units, four utf-8 bytes.
+  const result = slugify('\u{20000}'.repeat(40) + 'x');
+  assert.equal(result, '\u{20000}'.repeat(40) + 'x');
+  assert.ok(result.isWellFormed());
+});
+
+test('slugify caps the slug at 200 utf-8 bytes', () => {
+  const result = slugify('\u{20000}'.repeat(60));
+  assert.equal(result, '\u{20000}'.repeat(50));
+  assert.ok(Buffer.byteLength(result, 'utf8') <= 200);
+});
+
+test('slugify keeps combining marks', () => {
+  assert.equal(slugify('हिन्दी विकिपीडिया'), 'हिन्दी-विकिपीडिया');
+});
+
+test('slugify normalizes decomposed input to NFC', () => {
+  assert.equal(slugify('Café'), 'café');
 });
 
 test('slugify trims leading and trailing hyphens after truncation', () => {
